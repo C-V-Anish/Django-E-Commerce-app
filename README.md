@@ -1,2 +1,2 @@
-# E-Com
-An E-Commerce application made with the help of Django.
+# Django-E-Commerce-app
+An online E-Commerce application built using Django framework
