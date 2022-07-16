@@ -1,0 +1,107 @@
+{% extends 'basic.html' %}
+
+{% block title%}Checkout-MAC{% endblock %}
+{%block css%}
+    h2
+    {
+        text-align:center;
+    }
+{%endblock%}
+{%block body%}
+    <div class="container">
+        <div class="col my-4">
+            <h2>Step 1: View Cart Items :-</h2>
+            <div class="my-4">
+                <ol class="list-group list-group-numbered" id="items">
+                </ol>
+            </div>
+        </div>
+        <div class="col my-4">
+            <h2>Step 2: Enter Delivery Details :-</h2>
+            <form  method="post" action="/shop/checkout/" id="step2">{% csrf_token %}
+                <input type="hidden" name="itemsJson" id="itemsJson">
+                   <div class="form-row">
+                    <div class="form-group col-md-4">
+                      <label for="Name4">Name</label>
+                      <input type="text" class="form-control" id="name" name="name" placeholder="Shane Warne">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="Email4">E-Mail</label>
+                      <input type="email" class="form-control" id="email" name="email" placeholder="abc123@gmail.com">
+                    </div>
+                       <div class="form-group col-md-4">
+                      <label for="Phone4">Phone No.</label>
+                      <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter Phone Number">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputAddress">Address</label>
+                    <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputAddress2">Address 2</label>
+                    <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-6">
+                      <label for="inputCity">City</label>
+                      <input type="text" class="form-control" id="city" name="city">
+                    </div>
+                    <div class="form-group col-md-4">
+                      <label for="inputState">State</label>
+                      <input type="text" class="form-control" id="state" name="state" placeholder="Enter State">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="inputZip">Zip</label>
+                      <input type="text" class="form-control" id="zip_code" name="zip_code">
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Place Order</button>`
+            </form>
+        </div>
+    </div>
+{%endblock%}
+{%block js%}
+    <script>
+        if(localStorage.getItem('cart')==null)
+        {
+            var cart={};
+        }
+        else
+        {
+            cart=JSON.parse(localStorage.getItem('cart'));
+        }
+        var sum=0;
+        if($.isEmptyObject(cart))
+        {
+            myStr=`<p><h4 style="text-align:center">Your Cart is empty! Please add items before proceeding to checkout</h4></p>`
+             $('#items').append(myStr);
+             $("#step2 input").prop("disabled", true);
+             $('button').prop('disabled', true);
+        }
+        else
+        {
+            for(item in cart)
+            {
+                 let name=cart[item][1];
+                 let qty=cart[item][0];
+                 sum+=qty;
+                 myStr=`<li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                          <div class="fw-bold"><b>${name}</b></div>
+                          Content for list item
+                        </div>
+                        <span class="badge bg-primary rounded-pill">${qty}</span>
+                      </li>`
+                 $('#items').append(myStr);
+            }
+        }
+        document.getElementById('cart').innerHTML = sum;
+        $('#itemsJson').val(JSON.stringify(cart));
+        {% if thank %}
+            localStorage.clear();
+            alert('Thank you for odering in MAC.Your order id is {{id}}.Track Order using your ID in our Tracker');
+            document.location='/shop';
+        {% endif %}
+    </script>
+{%endblock%}

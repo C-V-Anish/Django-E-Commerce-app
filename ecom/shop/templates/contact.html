@@ -1,0 +1,39 @@
+{% extends 'basic.html' %}
+
+{% block title%} Title of About {% endblock %}
+{%block css%}
+.container
+{
+margin-left: 33.33%;
+padding-top: 25px;
+}
+.form-control
+{
+width: 50%;
+}
+{%endblock%}
+{%block body%}
+<div class="container">
+    <h3 style="height: 45px;">Contact Us</h3>
+    <form action="/shop/contact/" method="post">{% csrf_token %}
+              <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="NAME" placeholder="Eg: BRENDON McCULLUM" required>
+              </div>
+              <div class="mb-3">
+                <label for="name" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="EMAIL" PLACEHOLDER="Eg: abcxyz123@gmail.com" required>
+              </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="PHONE" required>
+              </div>
+            <div class="mb-3">
+                <label for="desc" class="form-label">How can MAC help you?</label>
+                <textarea class="form-control" id="desc" name="DESC" rows="3"></textarea>
+              </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+
+{%endblock%}

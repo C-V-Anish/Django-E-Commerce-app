@@ -1,0 +1,108 @@
+{% extends 'basic.html' %}
+
+{% block title%}MAC-Tracker{% endblock %}
+{%block css%}
+    h2
+    {
+        text-align:center;
+    }
+{%endblock%}
+{%block body%}
+    <div class="container my-4" style="width:50%">
+        <div class="col my-6">
+            <h2>Track your Order :-</h2>
+            <form  method="post" action="/shop/checkout/" id="trackerform">{% csrf_token %}
+                   <div class="form-row">
+                        <div class="form-group col-md-6">
+                              <label for="orderid">Order ID</label>
+                              <input type="text" class="form-control" id="orderid" name="orderid" placeholder="12">
+                        </div>
+                        <div class="form-group col-md-6">
+                              <label for="email">E-Mail</label>
+                              <input type="email" class="form-control" id="email" name="email" placeholder="abc123@gmail.com">
+                        </div>
+                       <button type="submit" class="btn btn-primary">Track Order</button>`
+                  </div>
+            </form>
+            <div class="col my-6">
+                <h2 class="my-3" id="ostat" hidden>Order Status:-</h2>
+                <ol class="list-group list-group-numbered" id="items">
+                </ol> 
+                <h2 class="my-3" id="costat" hidden>Order Details:-</h2>
+                <ol class="list-group list-group-numbered" id="citems">
+                </ol>
+            </div>
+        </div>
+    </div>
+{%endblock%}
+{%block js%}
+<script>
+    $('#trackerform').submit(function(event)
+    {
+        $('#ostat').removeAttr("hidden")
+        $('#costat').removeAttr("hidden")
+        $('#items').empty();
+            var formData =
+            {
+                'orderid':$('input[name=orderid]').val(),
+                'email':$('input[name=email]').val(),
+                'csrfmiddlewaretoken':$('input[name=csrfmiddlewaretoken]').val()
+            };
+
+            $.ajax(
+            {
+                type:'POST',
+                url:'/shop/tracker/',
+                data:formData,
+                encode:true
+            })
+            .done(function(data)
+            {
+                var data=JSON.parse(data)
+                var updates=data[0]
+                if(updates.length>0 & updates!={})
+                {
+                    for(i=0;i<updates.length;i++)
+                    {
+                        let status=updates[i]['text'];
+                        let time=updates[i]['time'];
+                        oup=`<li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                              <div class="fw-bold"><b>${status}</b></div>
+                              Content for list item
+                            </div>
+                            <span class="badge bg-primary rounded-pill">${time}</span>
+                          </li>`
+                          $('#items').append(oup);
+                    }
+                }
+                else
+                {
+                       oup=`<li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                        <div class="fw-bold">Invalid Credentials. Please check OrderID and E-Mail before proceeding.</div>
+                        </div>
+                        </li>`
+                    $('#items').append(oup);
+                }
+
+                cart=JSON.parse(data[1])
+                console.log(cart)
+                for(item in cart)
+                {
+                    let name=cart[item][1];
+                    let qty=cart[item][0];
+                    myStr=`<li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                            <div class="fw-bold"><b>${name}</b></div>
+                            Content for list item
+                            </div>
+                            <span class="badge bg-primary rounded-pill">${qty}</span>
+                        </li>`
+                    $('#citems').append(myStr);
+                }
+            });
+            event.preventDefault();
+    });
+</script>
+{%endblock%}
