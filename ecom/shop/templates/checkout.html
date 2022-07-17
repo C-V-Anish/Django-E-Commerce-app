@@ -15,6 +15,11 @@
                 <ol class="list-group list-group-numbered" id="items">
                 </ol>
             </div>
+            <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" id="pricetotal" aria-current="page"><b>Total Price : </b></li>
+  </ol>
+</nav>
         </div>
         <div class="col my-4">
             <h2>Step 2: Enter Delivery Details :-</h2>
@@ -72,6 +77,7 @@
             cart=JSON.parse(localStorage.getItem('cart'));
         }
         var sum=0;
+        let totalPrice=0;
         if($.isEmptyObject(cart))
         {
             myStr=`<p><h4 style="text-align:center">Your Cart is empty! Please add items before proceeding to checkout</h4></p>`
@@ -81,10 +87,13 @@
         }
         else
         {
+            
             for(item in cart)
             {
                  let name=cart[item][1];
                  let qty=cart[item][0];
+                 let price=cart[item][2];
+                 totalPrice=totalPrice+qty*price
                  sum+=qty;
                  myStr=`<li class="list-group-item d-flex justify-content-between align-items-start">
                         <div class="ms-2 me-auto">
@@ -97,6 +106,7 @@
             }
         }
         document.getElementById('cart').innerHTML = sum;
+        $('#pricetotal').append(totalPrice);
         $('#itemsJson').val(JSON.stringify(cart));
         {% if thank %}
             localStorage.clear();
