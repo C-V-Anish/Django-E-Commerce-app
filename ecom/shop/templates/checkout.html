@@ -106,7 +106,7 @@
             }
         }
         document.getElementById('cart').innerHTML = sum;
-        $('#pricetotal').append(totalPrice);
+        $('#pricetotal').append(totalPrice);                                      
         $('#itemsJson').val(JSON.stringify(cart));
         {% if thank %}
             localStorage.clear();

@@ -37,3 +37,12 @@ width: 50%;
 </div>
 
 {%endblock%}
+
+{%block js%}
+  <script>
+    {% if thank %}
+      alert('Thank you for contacting us.We will reach out to you very soon');
+      document.location='/shop/contact';
+    {% endif %}
+  </script>
+{% endblock %}
