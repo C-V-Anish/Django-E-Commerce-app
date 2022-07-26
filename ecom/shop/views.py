@@ -36,7 +36,6 @@ def contact(request):
     thank=False
     if request.method=='POST':
         print(request)
-        thank=True
         name = request.POST.get('NAME','')
         email = request.POST.get('EMAIL','')
         phone = request.POST.get('PHONE','')
@@ -44,6 +43,7 @@ def contact(request):
         print(name,email,phone,desc)
         contact=Contact(name=name,email=email,phone=phone,desc=desc)
         contact.save()
+        thank=True
     return render(request,'contact.html',{'thank':thank})
 
 
